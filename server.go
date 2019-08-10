@@ -2,24 +2,64 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
 	"net/http"
-
-	html "./html"
 )
 
+type Page struct {
+	Title string
+	Body  []byte
+}
+
+func (p *Page) save() error {
+	filename := p.Title + ".txt"
+	return ioutil.WriteFile(filename, p.Body, 0600)
+}
+
+func loadPage(title string) (*Page, error) {
+	filename := title + ".txt"
+	body, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return &Page{Title: title, Body: body}, nil
+}
+
 func main() {
-	http.HandleFunc("/", handle)
+	http.HandleFunc("/view/", viewHandle)
+	http.HandleFunc("/edit/", editHandle)
+	// http.HandleFunc("/save/", saveHandle)
 
-	fmt.Println("Server is on!")
-
-	http.ListenAndServe(":21337", nil)
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func handle(w http.ResponseWriter, t *http.Request) {
+func viewHandle(w http.ResponseWriter, t *http.Request) {
+	title := t.URL.Path[len("/view/"):]
+	p, _ := loadPage(title)
 
-	content := html.CreateContent("Hello Bucureeesti")
-	para := html.CreateContent("Ce faceti cum mai sunteti?")
-	content.Tag("h1").Merge(para.Tag("p")).Tag("body").Tag("html")
-
-	fmt.Fprintln(w, content.Text)
+	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
 }
+
+func editHandle(w http.ResponseWriter, t *http.Request) {
+	title := t.URL.Path[len("/edit/"):]
+	p, err := loadPage(title)
+	if err != nil {
+		p = &Page(Title: title)
+	}
+
+
+	fmt.Fprintf(w, "<h1>Editing %s</h1>"+
+		"<form action=\"/save/%s\" method=\"POST\">"+
+		"<textarea name=\"body\">%s</textarea><br>"+
+		"<input type=\"submit\" value=\"Save\">"+
+		"</form>",
+		p.Title, p.Title, p.Body)
+}
+
+// func saveHandle(w http.ResponseWriter, t *http.Request) {
+// 	title := t.URL.Path[len("/view/"):]
+// 	p, _ := loadPage(title)
+
+// 	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
+// }
