@@ -27,6 +27,7 @@ func loadPage(title string) (*Page, error) {
 }
 
 func main() {
+	http.Handle("/", http.FileServer(http.Dir("./webpage")))
 	http.HandleFunc("/view/", viewHandle)
 	http.HandleFunc("/edit/", editHandle)
 	// http.HandleFunc("/save/", saveHandle)
@@ -42,19 +43,18 @@ func viewHandle(w http.ResponseWriter, t *http.Request) {
 }
 
 func editHandle(w http.ResponseWriter, t *http.Request) {
-	title := t.URL.Path[len("/edit/"):]
-	p, err := loadPage(title)
-	if err != nil {
-		p = &Page(Title: title)
-	}
+	// title := t.URL.Path[len("/edit/"):]
+	// p, err := loadPage(title)
+	// if err != nil {
+	// 	p = &Page(Title: title)
+	// }
 
-
-	fmt.Fprintf(w, "<h1>Editing %s</h1>"+
-		"<form action=\"/save/%s\" method=\"POST\">"+
-		"<textarea name=\"body\">%s</textarea><br>"+
-		"<input type=\"submit\" value=\"Save\">"+
-		"</form>",
-		p.Title, p.Title, p.Body)
+	// fmt.Fprintf(w, "<h1>Editing %s</h1>"+
+	// 	"<form action=\"/save/%s\" method=\"POST\">"+
+	// 	"<textarea name=\"body\">%s</textarea><br>"+
+	// 	"<input type=\"submit\" value=\"Save\">"+
+	// 	"</form>",
+	// 	p.Title, p.Title, p.Body)
 }
 
 // func saveHandle(w http.ResponseWriter, t *http.Request) {
