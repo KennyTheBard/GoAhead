@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -36,26 +35,28 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 
-func viewHandle(w http.ResponseWriter, t *http.Request) {
-	title := t.URL.Path[len("/view/"):]
-	p, _ := loadPage(title)
-
-	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
-}
-
 func editHandle(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/edit/"):]
 	p, err := loadPage(title)
 	if err != nil {
 		p = &Page{Title: title}
 	}
+	renderTemplate(w, "edit", p)
+}
 
-	t, err := template.ParseFiles("webpage/edit.html")
+func viewHandle(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/edit/"):]
+	p, err := loadPage(title)
 	if err != nil {
-		fmt.Println(err)
-	} else {
-		t.Execute(w, p)
+		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
+		return
 	}
+	renderTemplate(w, "view", p)
+}
+
+func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+	t, _ := template.ParseFiles("webpage/" + tmpl + ".html")
+	t.Execute(w, p)
 }
 
 // func saveHandle(w http.ResponseWriter, t *http.Request) {
