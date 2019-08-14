@@ -30,7 +30,7 @@ func main() {
 	http.Handle("/", http.FileServer(http.Dir("./webpage")))
 	http.HandleFunc("/view/", viewHandle)
 	http.HandleFunc("/edit/", editHandle)
-	// http.HandleFunc("/save/", saveHandle)
+	http.HandleFunc("/save/", saveHandle)
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
@@ -55,13 +55,26 @@ func viewHandle(w http.ResponseWriter, r *http.Request) {
 }
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	t, _ := template.ParseFiles("webpage/" + tmpl + ".html")
-	t.Execute(w, p)
+	t, err := template.ParseFiles("webpage/" + tmpl + ".html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	err = t.Execute(w, p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
-// func saveHandle(w http.ResponseWriter, t *http.Request) {
-// 	title := t.URL.Path[len("/view/"):]
-// 	p, _ := loadPage(title)
+func saveHandle(w http.ResponseWriter, r *http.Request) {
+	title := r.URL.Path[len("/save/"):]
+	body := r.FormValue("body")
+	p := &Page{Title: title, Body: []byte(body)}
+	err := p.save()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-// 	fmt.Fprintf(w, "<h1>%s</h1><div>%s</div>", p.Title, p.Body)
-// }
+	http.Redirect(w, r, "/view/"+title, http.StatusFound)
+}
