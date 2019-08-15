@@ -7,6 +7,12 @@ import (
 	"net/http"
 )
 
+var template_location = "webpage/"
+
+var templates = template.Must(template.ParseFiles(
+	template_location+"edit.html",
+	template_location+"view.html"))
+
 type Page struct {
 	Title string
 	Body  []byte
@@ -54,18 +60,6 @@ func viewHandle(w http.ResponseWriter, r *http.Request) {
 	renderTemplate(w, "view", p)
 }
 
-func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
-	t, err := template.ParseFiles("webpage/" + tmpl + ".html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	err = t.Execute(w, p)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
-
 func saveHandle(w http.ResponseWriter, r *http.Request) {
 	title := r.URL.Path[len("/save/"):]
 	body := r.FormValue("body")
@@ -77,4 +71,11 @@ func saveHandle(w http.ResponseWriter, r *http.Request) {
 	}
 
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
+}
+
+func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
+	err := templates.ExecuteTemplate(w, tmpl+".html", p)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
