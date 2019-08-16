@@ -6,12 +6,14 @@
 </h1>
 
 <form action="/save/{{.Title}}" method="POST">
-    <div>
-        <textarea name="body" rows="20" cols="80">
+    <div class="element">
+        <textarea   name="body"
+                    rows="20"
+                    style="width:100%; text-align: start">
             {{printf "%s" .Body}}
         </textarea>
     </div>
-    <div>
+    <div class="element">
         <input type="submit" value="Save">
     </div>
 </form>
