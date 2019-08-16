@@ -2,6 +2,8 @@ package util
 
 import "io/ioutil"
 
+var doc_dir = "./docs"
+
 type Page struct {
 	Title string
 	Body  []byte
@@ -13,7 +15,7 @@ func (p *Page) save() error {
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := title + ".txt"
+	filename := doc_dir + "/" + title + ".txt"
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err

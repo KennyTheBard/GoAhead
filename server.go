@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	http.HandleFunc("/", util.DashboardHandle)
 	http.HandleFunc("/view/", util.MakeHandle(util.ViewHandle))
 	http.HandleFunc("/edit/", util.MakeHandle(util.EditHandle))
 	http.HandleFunc("/save/", util.MakeHandle(util.SaveHandle))

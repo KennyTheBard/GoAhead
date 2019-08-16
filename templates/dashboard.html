@@ -1,0 +1,10 @@
+
+    <h1>Dashboard</h1>
+
+    {{range .Pages}}
+    <div>
+        <a href="/view/{{.Title}}">
+            {{.Title}}
+        </a>
+    </div>
+    {{end}}
