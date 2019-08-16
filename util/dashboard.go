@@ -7,23 +7,15 @@ import (
 	"strings"
 )
 
-type file_meta struct {
-	Title string
-}
-
-type files_wrapper struct {
-	Pages []file_meta
-}
-
 func DashboardHandle(w http.ResponseWriter, r *http.Request) {
 	files, _ := ioutil.ReadDir(doc_dir)
 
-	filenames := make([]file_meta, len(files))
+	filenames := make([]string, len(files))
 	for i, f := range files {
-		filenames[i].Title = strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
+		filenames[i] = strings.TrimSuffix(f.Name(), filepath.Ext(f.Name()))
 	}
 
-	err := templates.ExecuteTemplate(w, "dashboard.html", files_wrapper{Pages: filenames})
+	err := templates.ExecuteTemplate(w, "dashboard.html", filenames)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
