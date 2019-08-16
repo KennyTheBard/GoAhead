@@ -5,12 +5,11 @@ import (
 	"net/http"
 )
 
-var template_location = "templates/"
-
 var templates = template.Must(template.ParseFiles(
-	template_location+"edit.html",
-	template_location+"view.html",
-	template_location+"dashboard.html"))
+	"templates/style.html",
+	"templates/edit.html",
+	"templates/view.html",
+	"templates/dashboard.html"))
 
 func renderTemplate(w http.ResponseWriter, tmpl string, p *Page) {
 	err := templates.ExecuteTemplate(w, tmpl+".html", p)
