@@ -8,10 +8,12 @@ import (
 )
 
 func main() {
-	http.HandleFunc("/", util.DashboardHandle)
-	http.HandleFunc("/view/", util.MakeHandle(util.ViewHandle))
-	http.HandleFunc("/edit/", util.MakeHandle(util.EditHandle))
-	http.HandleFunc("/save/", util.MakeHandle(util.SaveHandle))
+	mux := http.NewServeMux()
 
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	mux.HandleFunc("/", util.DashboardHandle)
+	mux.HandleFunc("/view/", util.MakeHandle(util.ViewHandle))
+	mux.HandleFunc("/edit/", util.MakeHandle(util.EditHandle))
+	mux.HandleFunc("/save/", util.MakeHandle(util.SaveHandle))
+
+	log.Fatal(http.ListenAndServe(":8081", mux))
 }
