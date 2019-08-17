@@ -11,6 +11,14 @@
     </a>
 </div>
 
+<div class="element">
+    <form action="/" method="GET" style="display: inline-block">
+        <input type="submit" value="Dashboard">
+    </form><form action="/edit/{{.Title}}" method="GET" style="display: inline-block">
+        <input type="submit" value="Edit">
+    </form>
+</div>
+
 <div class="element data">
     {{printf "%s" .Body}}
 </div>

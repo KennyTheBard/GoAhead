@@ -2,18 +2,18 @@
 {{ template "style.html" }}
 
 <h1>
-    Editing <span class="customizable">{{.Title}}</span>
+    Editing {{.Title}}
 </h1>
 
 <form action="/save/{{.Title}}" method="POST">
     <div class="element">
+        <input type="button" value="Back" onclick="history.back()">
+        <input type="submit" value="Save">
+    </div>
+
+    <div class="element">
         <textarea   name="body"
                     rows="20"
                     style="width:100%; text-align: left">{{printf "%s" .Body}}</textarea>
-    </div>
-    
-    <div class="element">
-        <input type="button" value="Back" onclick="history.back()">
-        <input type="submit" value="Save">
     </div>
 </form>
