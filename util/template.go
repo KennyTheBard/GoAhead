@@ -6,7 +6,7 @@ import (
 )
 
 var templates = template.Must(template.ParseFiles(
-	"templates/style.html",
+	"templates/head.html",
 	"templates/edit.html",
 	"templates/view.html",
 	"templates/dashboard.html"))
