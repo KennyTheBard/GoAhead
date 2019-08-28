@@ -1,6 +1,9 @@
 package util
 
-import "io/ioutil"
+import (
+	"io/ioutil"
+	"os"
+)
 
 var doc_dir = "./docs"
 
@@ -21,4 +24,9 @@ func loadPage(title string) (*Page, error) {
 		return nil, err
 	}
 	return &Page{Title: title, Body: body}, nil
+}
+
+func deletePage(title string) error {
+	filename := doc_dir + "/" + title + ".txt"
+	return os.Remove(filename)
 }

@@ -1,11 +1,12 @@
 package util
 
 import (
+	"fmt"
 	"net/http"
 	"regexp"
 )
 
-var pathValidator = regexp.MustCompile("^/(edit|save|view)/([a-zA-Z0-9]+)$")
+var pathValidator = regexp.MustCompile("^/(edit|save|view|delete)/([a-zA-Z0-9]+)$")
 
 func MakeHandle(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -47,4 +48,11 @@ func SaveHandle(w http.ResponseWriter, r *http.Request, title string) {
 	}
 
 	http.Redirect(w, r, "/view/"+title, http.StatusFound)
+}
+
+func DeleteHandle(w http.ResponseWriter, r *http.Request, title string) {
+	deletePage(title)
+	fmt.Println(title)
+
+	http.Redirect(w, r, "/", http.StatusFound)
 }
