@@ -1,13 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
 
 	util "./util"
 )
 
 func main() {
+	var port string
+	if len(os.Args) > 1 {
+		port = os.Args[1]
+	} else {
+		port = "8080"
+	}
+
+	if num, err := strconv.Atoi(port); err != nil || num < 0 || num > 65535 {
+		fmt.Println("Port must be a number between 0 and 65535!")
+		return
+	}
+
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", util.DashboardHandle)
@@ -16,5 +31,6 @@ func main() {
 	mux.HandleFunc("/save/", util.MakeHandle(util.SaveHandle))
 	mux.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("css/"))))
 
-	log.Fatal(http.ListenAndServe(":8080", mux))
+	fmt.Println("Starting server on port " + port)
+	log.Fatal(http.ListenAndServe(":"+port, mux))
 }
