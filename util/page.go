@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-var doc_dir = "./docs"
+var docDir = "./docs"
 
 type Page struct {
 	Title string
@@ -13,12 +13,12 @@ type Page struct {
 }
 
 func (p *Page) save() error {
-	filename := doc_dir + "/" + p.Title + ".txt"
+	filename := docDir + "/" + p.Title + ".txt"
 	return ioutil.WriteFile(filename, p.Body, 0600)
 }
 
 func loadPage(title string) (*Page, error) {
-	filename := doc_dir + "/" + title + ".txt"
+	filename := docDir + "/" + title + ".txt"
 	body, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
@@ -27,6 +27,6 @@ func loadPage(title string) (*Page, error) {
 }
 
 func deletePage(title string) error {
-	filename := doc_dir + "/" + title + ".txt"
+	filename := docDir + "/" + title + ".txt"
 	return os.Remove(filename)
 }

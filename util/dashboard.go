@@ -8,7 +8,7 @@ import (
 )
 
 func DashboardHandle(w http.ResponseWriter, r *http.Request) {
-	files, _ := ioutil.ReadDir(doc_dir)
+	files, _ := ioutil.ReadDir(docDir)
 
 	filenames := make([]string, len(files))
 	for i, f := range files {

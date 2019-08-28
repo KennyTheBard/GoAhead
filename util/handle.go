@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"net/http"
 	"regexp"
 )
@@ -52,7 +51,6 @@ func SaveHandle(w http.ResponseWriter, r *http.Request, title string) {
 
 func DeleteHandle(w http.ResponseWriter, r *http.Request, title string) {
 	deletePage(title)
-	fmt.Println(title)
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
