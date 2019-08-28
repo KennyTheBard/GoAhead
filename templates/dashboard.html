@@ -4,6 +4,20 @@
 
 <h1>Dashboard</h1>
 
+<form   method="POST" 
+        onclick='this.action = "/save/" + document.getElementById("fileName").value'>
+    <div class="element">
+        <textarea   id="fileName"
+                    rows="1"
+                    placeholder="File name here..."
+                    style="width:100%; text-align: left"
+                    ></textarea>
+        <input  type="submit" 
+                class="button" 
+                value="Create"/>
+    </div>
+</form>
+
 {{range .}}
 <div class="element list">
     <a href="/view/{{.}}">
