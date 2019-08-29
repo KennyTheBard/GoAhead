@@ -30,3 +30,9 @@ func deletePage(title string) error {
 	filename := docDir + "/" + title + ".txt"
 	return os.Remove(filename)
 }
+
+func renamePage(oldTitle, newTitle string) error {
+	oldFilename := docDir + "/" + oldTitle + ".txt"
+	newFilename := docDir + "/" + newTitle + ".txt"
+	return os.Rename(oldFilename, newFilename)
+}

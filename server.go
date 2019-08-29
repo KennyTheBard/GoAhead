@@ -30,6 +30,7 @@ func main() {
 	mux.HandleFunc("/edit/", util.MakeHandle(util.EditHandle))
 	mux.HandleFunc("/save/", util.MakeHandle(util.SaveHandle))
 	mux.HandleFunc("/delete/", util.MakeHandle(util.DeleteHandle))
+	mux.HandleFunc("/rename/", util.RenameHandle)
 	mux.Handle("/css/", http.StripPrefix("/css", http.FileServer(http.Dir("css/"))))
 	mux.Handle("/asset/", http.StripPrefix("/asset", http.FileServer(http.Dir("asset/"))))
 

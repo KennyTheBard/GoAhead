@@ -2,19 +2,18 @@ package util
 
 import (
 	"net/http"
-	"regexp"
+	"strings"
 )
-
-var pathValidator = regexp.MustCompile("^/(edit|save|view|delete)/([a-zA-Z0-9]+)$")
 
 func MakeHandle(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		m := pathValidator.FindStringSubmatch(r.URL.Path)
-		if m == nil {
+		pathArgs := strings.Split(r.URL.Path, "/")
+		if len(pathArgs) <= 1 {
 			http.NotFound(w, r)
 			return
 		}
-		fn(w, r, m[2])
+
+		fn(w, r, pathArgs[2])
 	}
 }
 
@@ -53,4 +52,17 @@ func DeleteHandle(w http.ResponseWriter, r *http.Request, title string) {
 	deletePage(title)
 
 	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+func RenameHandle(w http.ResponseWriter, r *http.Request) {
+	if pathArgs := strings.Split(r.URL.Path, "/"); len(pathArgs) == 4 {
+		oldTitle := pathArgs[2]
+		newTitle := pathArgs[3]
+
+		renamePage(oldTitle, newTitle)
+		http.Redirect(w, r, "/view/"+string(newTitle), http.StatusFound)
+
+	} else {
+		http.Redirect(w, r, "/", http.StatusNotFound)
+	}
 }
